@@ -18,7 +18,7 @@ int test_dbus_profile_object_path(void) {
 
 	static const struct {
 		enum bluetooth_profile profile;
-		int16_t codec;
+		uint16_t codec;
 		const char *path;
 	} profiles[] = {
 		/* test null/invalid path */
@@ -40,6 +40,10 @@ int test_dbus_profile_object_path(void) {
 #if ENABLE_APTX
 		{ BLUETOOTH_PROFILE_A2DP_SOURCE, A2DP_CODEC_VENDOR_APTX, "/A2DP/APTX/Source" },
 		{ BLUETOOTH_PROFILE_A2DP_SINK, A2DP_CODEC_VENDOR_APTX, "/A2DP/APTX/Sink" },
+#endif
+#if ENABLE_APTX_HD
+		{ BLUETOOTH_PROFILE_A2DP_SOURCE, A2DP_CODEC_VENDOR_APTX_HD, "/A2DP/APTXHD/Source" },
+		{ BLUETOOTH_PROFILE_A2DP_SINK, A2DP_CODEC_VENDOR_APTX_HD, "/A2DP/APTXHD/Sink" },
 #endif
 #if ENABLE_LDAC
 		{ BLUETOOTH_PROFILE_A2DP_SOURCE, A2DP_CODEC_VENDOR_LDAC, "/A2DP/LDAC/Source" },

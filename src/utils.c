@@ -162,6 +162,10 @@ const char *g_dbus_get_profile_object_path(enum bluetooth_profile profile, uint1
 		case A2DP_CODEC_VENDOR_APTX:
 			return "/A2DP/APTX/Source";
 #endif
+#if ENABLE_APTX_HD
+		case A2DP_CODEC_VENDOR_APTX_HD:
+			return "/A2DP/APTXHD/Source";
+#endif
 #if ENABLE_LDAC
 		case A2DP_CODEC_VENDOR_LDAC:
 			return "/A2DP/LDAC/Source";
@@ -185,6 +189,10 @@ const char *g_dbus_get_profile_object_path(enum bluetooth_profile profile, uint1
 #if ENABLE_APTX
 		case A2DP_CODEC_VENDOR_APTX:
 			return "/A2DP/APTX/Sink";
+#endif
+#if ENABLE_APTX_HD
+		case A2DP_CODEC_VENDOR_APTX_HD:
+			return "/A2DP/APTXHD/Sink";
 #endif
 #if ENABLE_LDAC
 		case A2DP_CODEC_VENDOR_LDAC:

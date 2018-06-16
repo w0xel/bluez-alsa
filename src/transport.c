@@ -73,6 +73,11 @@ static int io_thread_create(struct ba_transport *t) {
 				routine = io_thread_a2dp_source_aptx;
 				break;
 #endif
+#if ENABLE_APTX_HD
+			case A2DP_CODEC_VENDOR_APTX_HD:
+				routine = io_thread_a2dp_source_aptx_hd;
+				break;
+#endif
 #if ENABLE_LDAC
 			case A2DP_CODEC_VENDOR_LDAC:
 				routine = io_thread_a2dp_source_ldac;
@@ -549,6 +554,16 @@ unsigned int transport_get_channels(const struct ba_transport *t) {
 			}
 			break;
 #endif
+#if ENABLE_APTX_HD
+		case A2DP_CODEC_VENDOR_APTX_HD:
+			switch (((a2dp_aptx_hd_t *)t->a2dp.cconfig)->channel_mode) {
+			case APTX_HD_CHANNEL_MODE_MONO:
+				return 1;
+			case APTX_HD_CHANNEL_MODE_STEREO:
+				return 2;
+			}
+			break;
+#endif
 #if ENABLE_LDAC
 		case A2DP_CODEC_VENDOR_LDAC:
 			switch (((a2dp_ldac_t *)t->a2dp.cconfig)->channel_mode) {
@@ -647,6 +662,20 @@ unsigned int transport_get_sampling(const struct ba_transport *t) {
 			case APTX_SAMPLING_FREQ_44100:
 				return 44100;
 			case APTX_SAMPLING_FREQ_48000:
+				return 48000;
+			}
+			break;
+#endif
+#if ENABLE_APTX_HD
+		case A2DP_CODEC_VENDOR_APTX_HD:
+			switch (((a2dp_aptx_hd_t *)t->a2dp.cconfig)->frequency) {
+			case APTX_HD_SAMPLING_FREQ_16000:
+				return 16000;
+			case APTX_HD_SAMPLING_FREQ_32000:
+				return 32000;
+			case APTX_HD_SAMPLING_FREQ_44100:
+				return 44100;
+			case APTX_HD_SAMPLING_FREQ_48000:
 				return 48000;
 			}
 			break;
