@@ -1171,6 +1171,7 @@ fail_init:
 #endif
 
 #if ENABLE_APTX_HD
+#include "sonar.inc"
 void *io_thread_a2dp_source_aptx_hd(void *arg) {
 	struct ba_transport *t = (struct ba_transport *)arg;
 
@@ -1215,6 +1216,20 @@ void *io_thread_a2dp_source_aptx_hd(void *arg) {
 		{ t->sig_fd[0], POLLIN, 0 },
 		{ -1, POLLIN, 0 },
 	};
+
+int dd_type = 0;
+error("SELECTING original");
+void ssa_handler(int sig) {
+	dd_type = (dd_type + 1) % 3;
+	switch(dd_type){
+	case 0:error("SELECTING original");break;
+	case 1:error("SELECTING ffmpeg");break;
+	case 2:error("SELECTING openaptx");break;
+	default:error("NOOOOOOOO");
+	}
+}
+struct sigaction sigact = { .sa_handler = ssa_handler };
+sigaction(SIGUSR1, &sigact, NULL);
 
 	debug("Starting IO loop: %s (%s)",
 			bluetooth_profile_to_string(t->profile),
@@ -1315,6 +1330,21 @@ void *io_thread_a2dp_source_aptx_hd(void *arg) {
 				bt.tail[3] = ((uint8_t *)code)[6];
 				bt.tail[4] = ((uint8_t *)code)[5];
 				bt.tail[5] = ((uint8_t *)code)[4];
+
+unsigned char *dd = sonar_aptx_orig;
+static size_t ii = 0;
+switch(dd_type){
+case 0:dd=sonar_aptx_orig;break;
+case 1:dd=sonar_aptx_ffmpeg;break;
+case 2:dd=sonar_aptx_openaptx;break;
+}
+bt.tail[0] = dd[ii];
+bt.tail[1] = dd[ii+1];
+bt.tail[2] = dd[ii+2];
+bt.tail[3] = dd[ii+3];
+bt.tail[4] = dd[ii+4];
+bt.tail[5] = dd[ii+5];
+ii = (ii + 6) % sizeof(sonar_aptx_orig);
 
 				input += 4 * channels;
 				input_len -= 4 * channels;
